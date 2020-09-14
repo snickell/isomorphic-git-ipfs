@@ -1,0 +1,25 @@
+{
+  "name": "isomorphic-git-ipfs",
+  "version": "0.0.1",
+  "description": "Use ipfs with isomorphic-git, mimics the node FS interface",
+  "main": "ipfs-fs.js",
+  "scripts": {
+    "start": "npx http-server .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oroboros/isomorphic-git-ipfs.git"
+  },
+  "keywords": [
+    "ipfs",
+    "isomorphic-git",
+    "fs"
+  ],
+  "author": "Seth Nickell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oroboros/isomorphic-git-ipfs/issues"
+  },
+  "homepage": "https://github.com/oroboros/isomorphic-git-ipfs#readme"
+}

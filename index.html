@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/isomorphic-git@beta"></script>
+  </head>
+  <body>
+    <script type="module">
+      import * as fs from './src/fs.js'
+      window.fs = fs
+      console.log("FS is", fs)
+
+    </script>
+    <h1>Going</h1>
+  </body>
+</html>
