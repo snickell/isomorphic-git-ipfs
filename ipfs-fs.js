@@ -1,3 +1,5 @@
+
+
 // could also import this.... or....
 const IPFS = window.Ipfs
 
@@ -6,6 +8,33 @@ const IPFS = window.Ipfs
 
 // API docs:
 // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#the-mutable-files-api
+
+
+
+/*
+  This class implemented to fulfill:
+  https://isomorphic-git.org/docs/en/fs#using-the-promise-api-preferred :
+
+  Using the "promise" API (preferred)
+  A "promise" fs object must implement the same set functions as a "callback" implementation, but it implements the promisified versions, and they should all be on a property called promises:
+
+  fs.promises.readFile(path[, options])
+  fs.promises.writeFile(file, data[, options])
+  fs.promises.unlink(path)
+  fs.promises.readdir(path[, options])
+  fs.promises.mkdir(path[, mode])
+  fs.promises.rmdir(path)
+  fs.promises.stat(path[, options])
+  fs.promises.lstat(path[, options])
+  fs.promises.readlink(path[, options]) (optional ¹)
+  fs.promises.symlink(target, path[, type]) (optional ¹)
+  fs.promises.chmod(path, mode) (optional ²)
+
+  Footnote ¹ readlink and symlink are only needed to work with git repos that contain symlinks.
+
+  Footnote ² Right now, isomorphic-git rewrites the file if it needs to change its mode. In the future, if chmod is available it will use that.
+
+*/
 class FS {
   constructor() {
     this.promises = this
@@ -32,11 +61,14 @@ class FS {
       https://nodejs.org/api/fs.html#fs_fspromises_chmod_path_mode
       (optional ²(#footnote-2) :
       
+      Footnote ² Right now, isomorphic-git rewrites the file if it needs to change its mode. In the future, if chmod is available it will use that.
+
       fsPromises.chmod(path, mode)#
         path <string> | <Buffer> | <URL>
         mode <string> | <integer>
         Returns: <Promise>
         Changes the permissions of a file then resolves the Promise with no arguments upon succces.
+
     */
     console.log("chmod", path, mode)
     ipfs.files.chmod(path, mode, this.defaultIpfsOptions)
@@ -147,6 +179,8 @@ class FS {
       https://nodejs.org/api/fs.html#fs_fspromises_readlink_path_options :
       (optional ¹(#footnote-1)
 
+      Footnote ¹ readlink and symlink are only needed to work with git repos that contain symlinks.
+
       fsPromises.readlink(path[, options])#
         path <string> | <Buffer> | <URL>
         options <string> | <Object>
@@ -207,6 +241,7 @@ class FS {
     /*
       https://nodejs.org/api/fs.html#fs_fspromises_symlink_target_path_type
       (optional ¹(#footnote-1)
+      Footnote ¹ readlink and symlink are only needed to work with git repos that contain symlinks.
 
       fsPromises.symlink(target, path[, type])#
         target <string> | <Buffer> | <URL>
@@ -235,7 +270,7 @@ class FS {
 
   async writeFile(file, data, options) {
     const ipfs = await this._ipfs
-    
+
     /*
       https://nodejs.org/api/fs.html#fs_fspromises_writefile_file_data_options :
 
