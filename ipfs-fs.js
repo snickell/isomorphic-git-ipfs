@@ -71,7 +71,7 @@ class FS {
     ipfs.files.chmod(path, mode, this.defaultIpfsOptions)
   }
 
-  async lstat(path, options) {
+  async lstat(path, { bigint=false }={}) {
     const ipfs = await this._ipfs
     console.log("lstat", path, options)
 
@@ -90,7 +90,7 @@ class FS {
     throw new NotImplemented()
   }
 
-  async mkdir(path, mode) {
+  async mkdir(path, { recursive=false, mode=0o777 }={}) {
     const ipfs = await this._ipfs
 
     /*
@@ -109,12 +109,11 @@ class FS {
         The optional options argument can be an integer specifying mode (permission and sticky bits), or an object with a mode property and a recursive property indicating whether parent directories should be created. Calling fsPromises.mkdir() when path is a directory that exists results in a rejection only when recursive is false.
     */
     console.log("mkdir", path, mode)
-    ipfs.files.mkdir(path, [options])
-
-    throw new NotImplemented()
+    // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfsfilesmkdirpath-options
+    ipfs.files.mkdir(path, { mode, ...this.defaultIpfsOptions })
   }
 
-  async readdir(path, options) {
+  async readdir(path, { encoding='utf8', withFileTypes=false }={}) {
     const ipfs = await this._ipfs
 
     /*
@@ -148,7 +147,7 @@ class FS {
     throw new NotImplemented()
   }
 
-  async readFile(path, options) {
+  async readFile(path, { encoding=null, flag='r' }={}) {
     const ipfs = await this._ipfs
 
     /*
@@ -173,9 +172,11 @@ class FS {
     */
     console.log("readFile", path, options)
     throw new NotImplemented()
+
+    ipfs.files.read(path, [options])
   }  
 
-  async readlink(path, options) {
+  async readlink(path, { encoding='utf8' }={}) {
     const ipfs = await this._ipfs
 
     /*
@@ -198,7 +199,7 @@ class FS {
     throw new NotImplemented()
   }
 
-  async rmdir(path) {
+  async rmdir(path, { maxRetries=0, recursive=false, retryDelay=100 }={}) {
     const ipfs = await this._ipfs
 
     /*
@@ -220,7 +221,7 @@ class FS {
     throw new NotImplemented()
   }
 
-  async stat(path, options) {
+  async stat(path, { bigint=false }={}) {
     const ipfs = await this._ipfs
 
     /*
@@ -240,7 +241,7 @@ class FS {
     throw new NotImplemented()
   }
 
-  async symlink(target, path, type) {
+  async symlink(target, path, type='file') {
     const ipfs = await this._ipfs
 
     /*
@@ -275,7 +276,7 @@ class FS {
     throw new NotImplemented()
   }
 
-  async writeFile(file, data, options) {
+  async writeFile(file, data, { encoding='utf8', mode=0o666, flag='w' }={}) {
     const ipfs = await this._ipfs
 
     /*
