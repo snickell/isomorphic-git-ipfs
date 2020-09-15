@@ -7,6 +7,7 @@ const IPFS = window.Ipfs
 // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#the-mutable-files-api
 
 class NotImplemented extends Error {}
+class SymlinksNotSupportedError extends Error {}
 
 async function toArray(asyncIterable) {
   const out = []
@@ -97,7 +98,7 @@ class FS {
         Asynchronous lstat(2). The Promise is resolved with the fs.Stats object for the given symbolic link path.
     */
 
-    throw new NotImplemented()
+    throw new SymlinksNotSupportedError()
 
     // MFS doesn't seem to have symlink support?
     // probably creates cyclic problems?
@@ -224,7 +225,7 @@ class FS {
         The optional options argument can be a string specifying an encoding, or an object with an encoding property specifying the character encoding to use for the link path returned. If the encoding is set to 'buffer', the link path returned will be passed as a Buffer object.
     */
     console.log("readlink", path, options)
-    throw new NotImplemented()
+    throw new SymlinksNotSupportedError()
   }
 
   async rmdir(path, { maxRetries=0, recursive=false, retryDelay=100 }={}) {
@@ -305,7 +306,7 @@ class FS {
         The type argument is only used on Windows platforms and can be one of 'dir', 'file', or 'junction'. Windows junction points require the destination path to be absolute. When using 'junction', the target argument will automatically be normalized to absolute path.
     */
     console.log("symlink", target, path, type)
-    throw new NotImplemented()
+    throw new SymlinksNotSupportedError()
   }
 
   async unlink(path) {
