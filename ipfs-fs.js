@@ -123,6 +123,7 @@ class FS {
         The optional options argument can be an integer specifying mode (permission and sticky bits), or an object with a mode property and a recursive property indicating whether parent directories should be created. Calling fsPromises.mkdir() when path is a directory that exists results in a rejection only when recursive is false.
     */
     console.log("mkdir", path, mode)
+
     // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfsfilesmkdirpath-options
     return await ipfs.files.mkdir(path, { mode, ...this.defaultIpfsOptions })
   }
@@ -194,9 +195,13 @@ class FS {
         Any specified FileHandle has to support reading.
     */
     console.log("readFile", path, options)
-    throw new NotImplemented()
 
-    ipfs.files.read(path, [options])
+    const chunks = []
+    for await (const chunk of ipfs.files.read(path)) {
+      chunks.push(chunk)
+    }
+
+    return uint8ArrayConcat(chunks).toString()
   }  
 
   async readlink(path, { encoding='utf8' }={}) {
