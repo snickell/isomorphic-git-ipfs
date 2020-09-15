@@ -304,7 +304,22 @@ class FS {
         local is a boolean to indicate if the queried dag is fully present locally
         sizeLocal is an integer indicating the cumulative size of the data present locally
     */
-    return await ipfs.files.stat(path)
+    const {
+      cid, size, cumulativeSize, type, blocks, 
+      withLocality, local, sizeLocal 
+    } = await ipfs.files.stat(path)
+
+    const STAT_FIXED_RESULTS = {
+      // TODO: where do we get the mode from??? there's an ipfs.files.chmod... 
+      // but I don't see a way to read the mode???
+      mode:  0o666,
+      // TODO: does inode need to be a number? is it necessary?
+      inode: cid,
+      // TODO: we don't have mtime...
+      mtimeMs: 0,
+    }
+
+    return new Stat({ type, size, ...STAT_FIXED_RESULTS })
   }
 
   async symlink(target, path, type='file') {
