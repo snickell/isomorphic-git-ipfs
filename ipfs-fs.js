@@ -354,7 +354,7 @@ class FS {
         Asynchronous unlink(2). The Promise is resolved with no arguments upon success.
     */
     console.log("unlink", path)
-    throw new NotImplemented()
+    return ipfs.files.rm(path, this.defaultIpfsOptions)
   }
 
   async writeFile(file, data, { encoding='utf8', mode=0o666, flag='w' }={}) {
@@ -383,7 +383,16 @@ class FS {
         It is unsafe to use fsPromises.writeFile() multiple times on the same file without waiting for the Promise to be resolved (or rejected).
     */
     console.log("writeFile", file, data, options)
-    throw new NotImplemented()
+    
+    // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfsfileswritepath-content-options
+    // ipfs.files.write(path, content, [options])
+    // content	String, Buffer, AsyncIterable<Buffer> or Blob	The content to write to the path
+
+    // In can be string, Buffer, or Uint8Array
+    // gotta convert a Uint8Array to Blob or Buffer?
+    if (data instanceof Uint8Array)
+      data = new Blob([data])
+    return await ipfs.files.write(path, data, this.defaultIpfsOptions)
   }
 
 }
