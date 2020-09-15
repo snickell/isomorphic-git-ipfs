@@ -19,15 +19,9 @@ async function toArray(asyncIterable) {
 
 class Stat {
   constructor({ type, mode, size, ino, mtimeMs, ctimeMs }) {
-    this.type = type
-    this.mode = mode
-    this.size = size
-    this.ino = ino
-    this.mtimeMs = mtimeMs
+    Object.assign(this, { type, mode, size, ino, mtimeMs })
     this.ctimeMs = ctimeMs || mtimeMs
-    this.uid = 1
-    this.gid = 1
-    this.dev = 1
+    this.uid = this.gid = this.dev = 1
   }
   isFile() {
     return this.type === "file"
