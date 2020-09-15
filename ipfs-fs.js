@@ -41,6 +41,9 @@ function getIPFS() {
   }
 }
 
+const IPFS = getIPFS()
+const _ipfs = IPFS.create()
+
 /*
   This class implemented to fulfill:
   https://isomorphic-git.org/docs/en/fs#using-the-promise-api-preferred :
@@ -72,8 +75,7 @@ class FS {
       // flush	boolean	true	If true the changes will be immediately flushed to disk
       flush: true
     }
-    const IPFS = getIPFS()
-    this._ipfs = IPFS.create()
+    this._ipfs = _ipfs
   }
 
   get defaultIpfsOptions() {
