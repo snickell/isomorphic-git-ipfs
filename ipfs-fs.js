@@ -4,12 +4,9 @@
 const IPFS = window.Ipfs
 
 // We're gonna use the IPFS MFS API:
-// http://docs.ipfs.io.ipns.localhost:8080/concepts/file-systems/#mutable-file-system-mfs
-
-// API docs:
 // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#the-mutable-files-api
 
-
+class NotImplemented extends Error {}
 
 /*
   This class implemented to fulfill:
@@ -60,7 +57,7 @@ class FS {
     /*
       https://nodejs.org/api/fs.html#fs_fspromises_chmod_path_mode
       (optional ²(#footnote-2) :
-      
+
       Footnote ² Right now, isomorphic-git rewrites the file if it needs to change its mode. In the future, if chmod is available it will use that.
 
       fsPromises.chmod(path, mode)#
@@ -89,6 +86,8 @@ class FS {
         Returns: <Promise>
         Asynchronous lstat(2). The Promise is resolved with the fs.Stats object for the given symbolic link path.
     */
+
+    throw new NotImplemented()
   }
 
   async mkdir(path, mode) {
@@ -111,6 +110,8 @@ class FS {
     */
     console.log("mkdir", path, mode)
     ipfs.files.mkdir(path, [options])
+
+    throw new NotImplemented()
   }
 
   async readdir(path, options) {
@@ -144,6 +145,7 @@ class FS {
     */
 
     console.log("readdir", path, options)
+    throw new NotImplemented()
   }
 
   async readFile(path, options) {
@@ -170,6 +172,7 @@ class FS {
         Any specified FileHandle has to support reading.
     */
     console.log("readFile", path, options)
+    throw new NotImplemented()
   }  
 
   async readlink(path, options) {
@@ -192,6 +195,7 @@ class FS {
         The optional options argument can be a string specifying an encoding, or an object with an encoding property specifying the character encoding to use for the link path returned. If the encoding is set to 'buffer', the link path returned will be passed as a Buffer object.
     */
     console.log("readlink", path, options)
+    throw new NotImplemented()
   }
 
   async rmdir(path) {
@@ -213,11 +217,11 @@ class FS {
         Using fsPromises.rmdir() on a file (not a directory) results in the Promise being rejected with an ENOENT error on Windows and an ENOTDIR error on POSIX.
     */
     console.log("rmdir", path)
+    throw new NotImplemented()
   }
 
   async stat(path, options) {
     const ipfs = await this._ipfs
-    // 
 
     /*
       https://nodejs.org/api/fs.html#fs_fspromises_stat_path_options :
@@ -233,6 +237,7 @@ class FS {
         Link to fs.Stats: https://nodejs.org/api/fs.html#fs_class_fs_stats
     */
     console.log("stat", path, options)
+    throw new NotImplemented()
   }
 
   async symlink(target, path, type) {
@@ -253,6 +258,7 @@ class FS {
         The type argument is only used on Windows platforms and can be one of 'dir', 'file', or 'junction'. Windows junction points require the destination path to be absolute. When using 'junction', the target argument will automatically be normalized to absolute path.
     */
     console.log("symlink", target, path, type)
+    throw new NotImplemented()
   }
 
   async unlink(path) {
@@ -266,6 +272,7 @@ class FS {
         Asynchronous unlink(2). The Promise is resolved with no arguments upon success.
     */
     console.log("unlink", path)
+    throw new NotImplemented()
   }
 
   async writeFile(file, data, options) {
@@ -294,6 +301,7 @@ class FS {
         It is unsafe to use fsPromises.writeFile() multiple times on the same file without waiting for the Promise to be resolved (or rejected).
     */
     console.log("writeFile", file, data, options)
+    throw new NotImplemented()
   }
 
 }
