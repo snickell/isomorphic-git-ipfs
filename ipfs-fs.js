@@ -1,8 +1,3 @@
-
-
-// could also import this.... or....
-const IPFS = window.Ipfs
-
 // We're gonna use the IPFS MFS API:
 // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#the-mutable-files-api
 
@@ -31,6 +26,18 @@ class Stat {
   }
   isSymbolicLink() {
     return this.type === "symlink"
+  }
+}
+
+
+function getIPFS() {
+  if (typeof window !== 'undefined') {
+    return window.Ipfs
+  } else if (typeof require !== 'undefined') {
+    return require('ipfs')
+  } else {
+    //return await import('ipfs')
+    throw Error("Can't find Ipfs")
   }
 }
 
@@ -65,9 +72,7 @@ class FS {
       // flush	boolean	true	If true the changes will be immediately flushed to disk
       flush: true
     }
-  }
-
-  async initIPFS() {
+    const IPFS = getIPFS()
     this._ipfs = IPFS.create()
   }
 
