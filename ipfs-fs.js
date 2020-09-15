@@ -247,7 +247,10 @@ class FS {
         Using fsPromises.rmdir() on a file (not a directory) results in the Promise being rejected with an ENOENT error on Windows and an ENOTDIR error on POSIX.
     */
     console.log("rmdir", path)
-    throw new NotImplemented()
+
+    // TODO: probably should check if its a dir first and throw an error if its not 🤷‍♂️
+
+    return await ipfs.files.rm(path, { recursive, ...this.defaultIpfsOptions })
   }
 
   async stat(path, { bigint=false }={}) {
