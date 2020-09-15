@@ -106,7 +106,7 @@ class FS {
 
   async lstat(path, { bigint=false }={}) {
     const ipfs = await this._ipfs
-    console.log("lstat", path, options)
+    console.log("lstat", path)
 
     /*
       https://nodejs.org/api/fs.html#fs_fspromises_lstat_path_options :
@@ -181,7 +181,7 @@ class FS {
         print('./').catch(console.error);
     */
 
-    console.log("readdir", path, options)
+    console.log("readdir", path)
 
     // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfsfileslspath-options
     const dirents = await toArray(
@@ -217,7 +217,7 @@ class FS {
 
         Any specified FileHandle has to support reading.
     */
-    console.log("readFile", path, options)
+    console.log("readFile", path)
 
     const chunks = []
     for await (const chunk of ipfs.files.read(path)) {
@@ -246,7 +246,7 @@ class FS {
 
         The optional options argument can be a string specifying an encoding, or an object with an encoding property specifying the character encoding to use for the link path returned. If the encoding is set to 'buffer', the link path returned will be passed as a Buffer object.
     */
-    console.log("readlink", path, options)
+    console.log("readlink", path)
     throw new SymlinksNotSupportedError()
   }
 
@@ -291,7 +291,7 @@ class FS {
 
         Link to fs.Stats: https://nodejs.org/api/fs.html#fs_class_fs_stats
     */
-    console.log("stat", path, options)
+    console.log("stat", path)
 
     // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfsfilesstatpath-options
 
@@ -403,7 +403,7 @@ class FS {
 
         It is unsafe to use fsPromises.writeFile() multiple times on the same file without waiting for the Promise to be resolved (or rejected).
     */
-    console.log("writeFile", file, data, options)
+    console.log("writeFile", file, data, { encoding, mode, flag })
     
     // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfsfileswritepath-content-options
     // ipfs.files.write(path, content, [options])
@@ -418,4 +418,8 @@ class FS {
 
 }
 
-module.exports = FS
+if (typeof window !== 'undefined') {
+  window.FS = FS
+} else if (typeof module !== 'undefined') {
+  module.exports = FS
+}
