@@ -8,6 +8,14 @@ const IPFS = window.Ipfs
 
 class NotImplemented extends Error {}
 
+async function toArray(asyncIterable) {
+  const out = []
+  for await (const x of asyncIterable) {
+    out.push(x)
+  }
+  return out
+}
+
 /*
   This class implemented to fulfill:
   https://isomorphic-git.org/docs/en/fs#using-the-promise-api-preferred :
@@ -68,7 +76,9 @@ class FS {
 
     */
     console.log("chmod", path, mode)
-    ipfs.files.chmod(path, mode, this.defaultIpfsOptions)
+
+    // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfsfileschmodpath-mode-options
+    return await ipfs.files.chmod(path, mode, this.defaultIpfsOptions)
   }
 
   async lstat(path, { bigint=false }={}) {
@@ -88,6 +98,10 @@ class FS {
     */
 
     throw new NotImplemented()
+
+    // MFS doesn't seem to have symlink support?
+    // probably creates cyclic problems?
+    return this.stat(path)
   }
 
   async mkdir(path, { recursive=false, mode=0o777 }={}) {
@@ -110,7 +124,7 @@ class FS {
     */
     console.log("mkdir", path, mode)
     // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfsfilesmkdirpath-options
-    ipfs.files.mkdir(path, { mode, ...this.defaultIpfsOptions })
+    return await ipfs.files.mkdir(path, { mode, ...this.defaultIpfsOptions })
   }
 
   async readdir(path, { encoding='utf8', withFileTypes=false }={}) {
@@ -144,7 +158,16 @@ class FS {
     */
 
     console.log("readdir", path, options)
-    throw new NotImplemented()
+
+    // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfsfileslspath-options
+    const dirents = await toArray(
+        ipfs.files.ls(path)
+    )
+    
+    // Unless withFileTypes is passed in, we just return the filename
+    return dirents.map(
+      ({ name, type, size, cid, mode, mtime }) => name
+    )
   }
 
   async readFile(path, { encoding=null, flag='r' }={}) {
@@ -239,6 +262,24 @@ class FS {
     */
     console.log("stat", path, options)
     throw new NotImplemented()
+
+    // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfsfilesstatpath-options
+
+    // TODO: compare difference between fs.Stats (https://nodejs.org/api/fs.html#fs_class_fs_stats)
+    // and the IPFS return value:
+    /*
+      the returned object has the following keys:
+        cid a CID instance
+        size is an integer with the file size in Bytes
+        cumulativeSize is an integer with the size of the DAGNodes making up the file in Bytes
+        type is a string that can be either directory or file
+        blocks if type is directory, this is the number of files in the directory. If it is file it is the number of blocks that make up the file
+        withLocality is a boolean to indicate if locality information is present
+        local is a boolean to indicate if the queried dag is fully present locally
+        sizeLocal is an integer indicating the cumulative size of the data present locally
+    */
+    return await ipfs.files.stat(path)
+
   }
 
   async symlink(target, path, type='file') {
