@@ -17,6 +17,29 @@ async function toArray(asyncIterable) {
   return out
 }
 
+class Stat {
+  constructor({ type, mode, size, ino, mtimeMs, ctimeMs }) {
+    this.type = type
+    this.mode = mode
+    this.size = size
+    this.ino = ino
+    this.mtimeMs = mtimeMs
+    this.ctimeMs = ctimeMs || mtimeMs
+    this.uid = 1
+    this.gid = 1
+    this.dev = 1
+  }
+  isFile() {
+    return this.type === "file"
+  }
+  isDirectory() {
+    return this.type === "dir"
+  }
+  isSymbolicLink() {
+    return this.type === "symlink"
+  }
+}
+
 /*
   This class implemented to fulfill:
   https://isomorphic-git.org/docs/en/fs#using-the-promise-api-preferred :
@@ -288,7 +311,6 @@ class FS {
         sizeLocal is an integer indicating the cumulative size of the data present locally
     */
     return await ipfs.files.stat(path)
-
   }
 
   async symlink(target, path, type='file') {
