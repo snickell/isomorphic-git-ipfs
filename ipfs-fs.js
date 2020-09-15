@@ -287,7 +287,6 @@ class FS {
         Link to fs.Stats: https://nodejs.org/api/fs.html#fs_class_fs_stats
     */
     console.log("stat", path, options)
-    throw new NotImplemented()
 
     // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfsfilesstatpath-options
 
@@ -310,15 +309,32 @@ class FS {
     } = await ipfs.files.stat(path)
 
     const STAT_FIXED_RESULTS = {
-      // TODO: where do we get the mode from??? there's an ipfs.files.chmod... 
-      // but I don't see a way to read the mode???
+      // TODO: we don't have mode....
+      // we could get from ipfs.files.ls(parent(path))
       mode:  0o666,
       // TODO: does inode need to be a number? is it necessary?
       inode: cid,
-      // TODO: we don't have mtime...
+      // TODO: we don't have mtime... 
+      // we could get from ipfs.files.ls(parent(path))
       mtimeMs: 0,
     }
 
+    // TODO: get the missing values from ipfs.files.ls:
+    // https://github.com/ipfs/js-ipfs/blob/master/docs/core-api/FILES.md#ipfsfileslspath-options
+    /*
+      ipfs.files.ls(path)
+        Returns
+        Type	Description
+        AsyncIterable<Object>	An async iterable that yields objects representing the files
+        Each object contains the following keys:
+
+        name which is the file's name
+        type which is the object's type (directory or file)
+        size the size of the file in bytes
+        cid the hash of the file (A CID instance)
+        mode the UnixFS mode as a Number
+        mtime an objects with numeric secs and nsecs properties
+    */
     return new Stat({ type, size, ...STAT_FIXED_RESULTS })
   }
 
